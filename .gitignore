@@ -22,3 +22,5 @@ env/
 
 # Streamlit
 .streamlit/
+
+temp_uploaded_image.jpg

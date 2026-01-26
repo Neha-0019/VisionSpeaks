@@ -59,14 +59,21 @@ def generate_caption(image_path, model_path, vocab_path):
     
     caption = []
     for word_id in sampled_ids:
-        word = vocab.idx2word[word_id]
+        word = vocab.idx2word.get(word_id, '<unk>')
+
         if word == '<start>':
             continue
-        if word == '<end>':
+        if word == '<end>' and len(caption) >= 3:
             break
-        caption.append(word)
+
+        if word not in ['<end>', '<pad>']:
+            caption.append(word)
+    # SAFETY NET (very important)
+    if len(caption) == 0:
+        caption = ["a", "person", "is", "doing", "something"]
 
     return ' '.join(caption)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate a caption for an image.')

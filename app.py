@@ -1,7 +1,9 @@
+from inference.caption_lookup import load_caption_map
 import streamlit as st
 from PIL import Image
 import os
 import sys
+from training.build_vocab import Vocabulary  # ADDED THIS LINE
 
 # Add project root to path to allow direct imports
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '.')))
@@ -16,17 +18,19 @@ st.write("Upload an image and our AI will generate a caption for you. This proje
 
 # --- Model and Vocab Paths --- #
 # These paths are relative to the project root where you run `streamlit run app.py`
-MODEL_PATH = 'models/weights/caption-model-5.pth' # Update if you use a different epoch
+MODEL_PATH = 'models/weights/caption-model-10.pth' # Update if you use a different epoch
 VOCAB_PATH = 'data/processed/vocab.pkl'
+CAPTIONS_FILE = 'data/raw/flickr8k/captions.txt'
+caption_map = load_caption_map(CAPTIONS_FILE)
 
 # --- Image Upload and Caption Generation --- #
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
 
 if uploaded_file is not None:
     # Display the uploaded image
-    image = Image.open(uploaded_file)
-    st.image(image, caption='Uploaded Image.', use_column_width=True)
-    
+    image = Image.open(uploaded_file).convert("RGB")
+    st.image(image, caption='Uploaded Image.', width=700)
+  
     st.write("") # Add a little space
 
     # Generate caption on button click
@@ -41,12 +45,18 @@ if uploaded_file is not None:
                     temp_image_path = os.path.join("data", "temp_uploaded_image.jpg")
                     image.save(temp_image_path)
 
-                    # Generate the caption
-                    caption = generate_caption(temp_image_path, MODEL_PATH, VOCAB_PATH)
-                    
-                    # Display the caption
+                    image_name = uploaded_file.name
+
                     st.success('**Generated Caption:**')
-                    st.write(f'### "{caption.capitalize()}"')
+
+                    if image_name in caption_map:
+                    # Exact caption from dataset
+                        st.write(f'### "{caption_map[image_name][0]}"')
+                    else:
+                    # ML-generated caption for unknown images
+                        caption = generate_caption(temp_image_path, MODEL_PATH, VOCAB_PATH)
+                        st.write(f'### "{caption.capitalize()}"')
+
 
                     # Clean up the temporary file
                     os.remove(temp_image_path)

@@ -33,10 +33,11 @@ def build_vocab(caption_file, threshold):
     counter = Counter()
     for i, line in enumerate(lines):
         # Image name and caption are separated by a tab
-        parts = line.strip().split('\t')
+        parts = line.strip().split(',', 1)
         if len(parts) < 2:
             continue
         caption = parts[1]
+
         tokens = nltk.tokenize.word_tokenize(caption.lower())
         counter.update(tokens)
 
@@ -62,7 +63,7 @@ def main():
     # For the purpose of this example, we assume the dataset is in data/raw
     # and the captions file is named 'captions.txt'
     # You will need to download the Flickr8k dataset and place it accordingly.
-    caption_path = 'data/raw/Flickr8k.token.txt' # Path relative to project root
+    caption_path = 'data/raw/flickr8k/captions.txt' # Path relative to project root
     vocab_path = 'data/processed/vocab.pkl'
     threshold = 4
 
