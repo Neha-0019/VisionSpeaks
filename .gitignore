@@ -1,0 +1,26 @@
+# Datasets
+data/raw/
+data/processed/
+
+# Trained models
+models/weights/
+*.pth
+
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment
+.venv/
+venv/
+env/
+.env
+
+# IDE-specific
+.idea/
+.vscode/
+*.log
+
+# Streamlit
+.streamlit/

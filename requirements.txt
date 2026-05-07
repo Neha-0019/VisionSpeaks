@@ -1,0 +1,7 @@
+torch
+torchvision
+numpy
+nltk
+streamlit
+Pillow
+tqdm
