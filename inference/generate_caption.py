@@ -5,14 +5,20 @@ import pickle
 import os
 import sys
 import argparse
+<<<<<<< HEAD
 import json
 import time
+=======
+>>>>>>> 8149cec3d77bdb582ed10f19d70d021fcfd93073
 
 # Add project root to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from models.caption_model import CaptionModel
+<<<<<<< HEAD
 from models.caption_model_attention import CaptionModelAttention
+=======
+>>>>>>> 8149cec3d77bdb582ed10f19d70d021fcfd93073
 from training.build_vocab import Vocabulary
 
 def load_image(image_path, transform=None):
@@ -25,6 +31,7 @@ def load_image(image_path, transform=None):
     
     return image
 
+<<<<<<< HEAD
 def generate_caption(image_path, model_path, vocab_path, embed_size, hidden_size, beam_size=5, max_len=20, length_penalty=0.8, temperature=0.0, return_all=False, repetition_penalty=1.2):
     """
     Generates a caption for a single image.
@@ -49,6 +56,10 @@ def generate_caption(image_path, model_path, vocab_path, embed_size, hidden_size
     # --- Hyperparameters --- #
     num_layers = 1 # As defined in train.py
 
+=======
+def generate_caption(image_path, model_path, vocab_path):
+    """Generates a caption for a single image."""
+>>>>>>> 8149cec3d77bdb582ed10f19d70d021fcfd93073
     # --- Device Configuration --- #
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -62,6 +73,7 @@ def generate_caption(image_path, model_path, vocab_path, embed_size, hidden_size
     with open(vocab_path, 'rb') as f:
         vocab = pickle.load(f)
     vocab_size = len(vocab)
+<<<<<<< HEAD
     end_idx = vocab.word2idx['<end>']
     start_idx = vocab.word2idx.get('<start>', 1)
     use_attention = 'attention' in os.path.basename(model_path)
@@ -72,6 +84,15 @@ def generate_caption(image_path, model_path, vocab_path, embed_size, hidden_size
     else:
         model = CaptionModel(embed_size, hidden_size, vocab_size, num_layers).to(device)
         model.load_state_dict(torch.load(model_path, map_location=device))
+=======
+
+    # --- Build Models --- #
+    embed_size = 256
+    hidden_size = 512
+    num_layers = 1
+    model = CaptionModel(embed_size, hidden_size, vocab_size, num_layers).to(device)
+    model.load_state_dict(torch.load(model_path, map_location=device))
+>>>>>>> 8149cec3d77bdb582ed10f19d70d021fcfd93073
     model.eval()
 
     # --- Prepare Image --- #
@@ -79,6 +100,7 @@ def generate_caption(image_path, model_path, vocab_path, embed_size, hidden_size
     image_tensor = image.to(device)
 
     # --- Generate Caption --- #
+<<<<<<< HEAD
     results = []
     with torch.no_grad():
         if use_attention:
@@ -133,16 +155,48 @@ def generate_caption(image_path, model_path, vocab_path, embed_size, hidden_size
     if not return_all:
         return final_captions[0]
     return final_captions
+=======
+    with torch.no_grad():
+        features = model.encoder(image_tensor)
+        sampled_ids = model.decoder.sample(features)
+    
+    # --- Convert Word IDs to Words --- #
+    
+    caption = []
+    for word_id in sampled_ids:
+        word = vocab.idx2word.get(word_id, '<unk>')
+
+        if word == '<start>':
+            continue
+        if word == '<end>' and len(caption) >= 3:
+            break
+
+        if word not in ['<end>', '<pad>']:
+            caption.append(word)
+    # SAFETY NET (very important)
+    if len(caption) == 0:
+        caption = ["a", "person", "is", "doing", "something"]
+
+    return ' '.join(caption)
+
+>>>>>>> 8149cec3d77bdb582ed10f19d70d021fcfd93073
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate a caption for an image.')
     parser.add_argument('--image', type=str, required=True, help='Path to the image file.')
     parser.add_argument('--model_path', type=str, default='../models/weights/caption-model-5.pth', help='Path to the trained model.')
     parser.add_argument('--vocab_path', type=str, default='../data/processed/vocab.pkl', help='Path to the vocabulary file.')
+<<<<<<< HEAD
     parser.add_argument('--beam_size', type=int, default=5, help='Beam size for beam search (1=greedy).')
     parser.add_argument('--max_len', type=int, default=20, help='Max caption length.')
     args = parser.parse_args()
 
     caption = generate_caption(args.image, args.model_path, args.vocab_path, beam_size=args.beam_size, max_len=args.max_len)
+=======
+    args = parser.parse_args()
+
+    # Generate and print the caption
+    caption = generate_caption(args.image, args.model_path, args.vocab_path)
+>>>>>>> 8149cec3d77bdb582ed10f19d70d021fcfd93073
     print("Generated Caption:")
     print(caption)

@@ -15,12 +15,23 @@ __pycache__/
 .venv/
 venv/
 env/
+<<<<<<< HEAD
 .env
+=======
+>>>>>>> 8149cec3d77bdb582ed10f19d70d021fcfd93073
 
 # IDE-specific
 .idea/
 .vscode/
+<<<<<<< HEAD
 *.log
 
 # Streamlit
 .streamlit/
+=======
+
+# Streamlit
+.streamlit/
+
+temp_uploaded_image.jpg
+>>>>>>> 8149cec3d77bdb582ed10f19d70d021fcfd93073

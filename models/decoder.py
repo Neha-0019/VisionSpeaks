@@ -55,6 +55,7 @@ class DecoderRNN(nn.Module):
             max_len (int, optional): Maximum length of the generated caption. Defaults to 20.
 
         Returns:
+<<<<<<< HEAD
             tuple: (sampled_ids, avg_log_prob)
         """
         sampled_ids = []
@@ -67,11 +68,22 @@ class DecoderRNN(nn.Module):
             
             sampled_ids.append(predicted.item())
             log_probs_sum += prob.item()
+=======
+            list: A list of word indices representing the generated caption.
+        """
+        sampled_ids = []
+        for i in range(max_len):
+            hiddens, states = self.lstm(inputs, states)
+            outputs = self.linear(hiddens.squeeze(1))
+            _, predicted = outputs.max(1)
+            sampled_ids.append(predicted.item())
+>>>>>>> 8149cec3d77bdb582ed10f19d70d021fcfd93073
 
             # Prepare the next input
             inputs = self.embed(predicted)
             inputs = inputs.unsqueeze(1)
 
+<<<<<<< HEAD
             # Stop if <end> token is generated (<end> is index 2: <pad>=0, <start>=1, <end>=2, <unk>=3)
             if predicted.item() == 2:
                 break
@@ -195,3 +207,9 @@ class DecoderRNN(nn.Module):
             return [(b[1], norm_score(b[0], len(b[1]))) for b in beams]
         best = beams[0]
         return best[1], norm_score(best[0], len(best[1]))
+=======
+            # Stop if <end> token is generated
+            if predicted.item() == 1:  # Assuming 1 is the index for <end>
+                break
+        return sampled_ids
+>>>>>>> 8149cec3d77bdb582ed10f19d70d021fcfd93073

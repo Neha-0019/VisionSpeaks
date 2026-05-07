@@ -28,8 +28,12 @@ class FlickrDataset(Dataset):
 
     def _load_captions(self, captions_file):
         import pandas as pd
+<<<<<<< HEAD
         df = pd.read_csv(captions_file, sep='\t', header=None, names=['image', 'caption'])
         df['image'] = df['image'].apply(lambda x: x.split('#')[0])
+=======
+        df = pd.read_csv(captions_file)  # CSV already has header
+>>>>>>> 8149cec3d77bdb582ed10f19d70d021fcfd93073
         # For training, we might use a subset of the data
         # For this project, we'll use the full dataset as specified by the file
         return df
@@ -37,7 +41,11 @@ class FlickrDataset(Dataset):
     def __len__(self):
         return len(self.df)
 
+<<<<<<< HEAD
     def __getitem__(self, idx):
+=======
+    def __getitem__(self, idx): 
+>>>>>>> 8149cec3d77bdb582ed10f19d70d021fcfd93073
         caption = self.captions[idx]
         img_name = self.imgs[idx]
         img_path = os.path.join(self.root_dir, img_name)
@@ -53,7 +61,11 @@ class FlickrDataset(Dataset):
 
         tokens = nltk.tokenize.word_tokenize(str(caption).lower())
         caption_vec = [self.vocab('<start>')] + [self.vocab(token) for token in tokens] + [self.vocab('<end>')]
+<<<<<<< HEAD
         target = torch.Tensor(caption_vec)
+=======
+        target = torch.tensor(caption_vec, dtype=torch.long)
+>>>>>>> 8149cec3d77bdb582ed10f19d70d021fcfd93073
         return image, target
 
 # --- Collate Function --- #
@@ -75,8 +87,13 @@ def main():
     print(f"Training on device: {device}")
 
     # Paths
+<<<<<<< HEAD
     data_dir = 'data/raw/Flicker8k_Dataset'  # Path relative to project root
     captions_file = 'data/raw/Flickr8k.token.txt' # Path relative to project root
+=======
+    data_dir = 'data/raw/flickr8k/Images' # Path relative to project root
+    captions_file = 'data/raw/flickr8k/captions.txt' # Path relative to project root
+>>>>>>> 8149cec3d77bdb582ed10f19d70d021fcfd93073
     vocab_path = 'data/processed/vocab.pkl' # Path relative to project root
     model_save_path = 'models/weights/' # Path relative to project root
 
@@ -88,7 +105,11 @@ def main():
     embed_size = 256
     hidden_size = 512
     num_layers = 1
+<<<<<<< HEAD
     num_epochs = 5
+=======
+    num_epochs = 10
+>>>>>>> 8149cec3d77bdb582ed10f19d70d021fcfd93073
     batch_size = 128
     learning_rate = 0.001
 
@@ -108,7 +129,17 @@ def main():
 
     # Build data loader
     dataset = FlickrDataset(root_dir=data_dir, captions_file=captions_file, vocab=vocab, transform=transform)
+<<<<<<< HEAD
     data_loader = DataLoader(dataset=dataset, batch_size=batch_size, shuffle=True, num_workers=2, collate_fn=collate_fn)
+=======
+    data_loader = DataLoader(
+        dataset=dataset,
+        batch_size=batch_size,
+        shuffle=True,
+        num_workers=0,
+        collate_fn=collate_fn
+    )
+>>>>>>> 8149cec3d77bdb582ed10f19d70d021fcfd93073
 
     # Build the models
     model = CaptionModel(embed_size, hidden_size, vocab_size, num_layers).to(device)
