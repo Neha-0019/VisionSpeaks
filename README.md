@@ -185,17 +185,11 @@ This will open a web browser where you can upload an image and generate a captio
 
 ## 🖼️ Sample Outputs
 
-*(You can add screenshots of your app's output here.)*
+### Image Upload Interface
+![Image Upload](assets/image-upload-1.png)
 
-**Example 1:**
-
--   **Image**: A dog catching a frisbee.
--   **Generated Caption**: "A dog is jumping to catch a red frisbee in a grassy field."
-
-**Example 2:**
-
--   **Image**: A group of people at a beach.
--   **Generated Caption**: "A group of people are standing on a sandy beach near the ocean."
+### Caption Generation Result
+![Caption Generation](assets/caption-generation-1.png)
 
 ---
 
